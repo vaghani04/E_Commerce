@@ -1,24 +1,25 @@
 from fastapi import APIRouter, Depends, status
 from app.models.schemas.product_schemas import ProductCreate, ProductResponse
 from app.controllers.product_controller import ProductCon
+from typing import List
 
 product_router = APIRouter(
     tags = ["Products"]
 )
 
-@product_router.post("/products", status_code=status.HTTP_201_CREATED)
+@product_router.post("/products", status_code=status.HTTP_201_CREATED, response_model= ProductResponse)
 async def upload_product(product_data: ProductCreate, product_controller: ProductCon = Depends()):
     return await product_controller.upload_product(product = product_data)
 
-@product_router.get("/products", status_code=status.HTTP_200_OK)
+@product_router.get("/products", status_code=status.HTTP_200_OK, response_model=List[ProductCreate])
 async def get_products(product_controller: ProductCon = Depends()):
     return await product_controller.get_products()
 
-@product_router.get("/products/{product_id}", status_code = status.HTTP_200_OK)
+@product_router.get("/products/{product_id}", status_code = status.HTTP_200_OK, response_model=ProductCreate)
 async def get_product(product_id: str, product_controller: ProductCon = Depends()):
     return await product_controller.get_specific_product(product_id = product_id)
 
-@product_router.put("/products/{product_id}", status_code=status.HTTP_200_OK)
+@product_router.put("/products/{product_id}", status_code=status.HTTP_200_OK, response_model=ProductResponse)
 async def update_product(product_id: str, product: ProductCreate, product_controller: ProductCon = Depends()):
    return await product_controller.update_product(product_id=product_id, product=product)
 

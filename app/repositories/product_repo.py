@@ -8,6 +8,7 @@ class ProductRepo:
 
     async def add_product(self, product_data: dict):
         result = await self.collection.insert_one(product_data)
+        # print(result['created_at'])
         return result
     
     async def get_product(self, product_id: str):

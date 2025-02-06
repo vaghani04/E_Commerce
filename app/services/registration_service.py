@@ -1,10 +1,11 @@
-from app.config.database import mongo_db_obj
+from app.config.database import db_helper
 from passlib.context import CryptContext
-from app.models.schemas import user_schemas
+from app.models.schemas.user_schemas import UserCreate
 from app.models.domain import registration_domain
 from app.utils.helper import user_helper
 from app.repositories.registration_repo import UserRegistrationRepo
 from fastapi import Depends
+from datetime import datetime, timezone
 
 
 class RegistrationService:
@@ -12,7 +13,7 @@ class RegistrationService:
     def __init__(self):
         self.pwd_context = CryptContext(schemes = ['bcrypt'], deprecated = 'auto')
         self.user_reg_repo = UserRegistrationRepo()
-        self.collection = mongo_db_obj.user_collection
+        self.collection = db_helper.users
         
     async def get_user_by_name(self, name: str):
         get_user_pipeline = [
@@ -28,16 +29,27 @@ class RegistrationService:
                 return document
         return {}
     
-    async def create_user(self, user: user_schemas.User):
+    async def create_user(self, user: UserCreate):
         hashed_password = self.pwd_context.hash(user.password)
+
+        domain_user = registration_domain.User(
+            name=user.name,
+            email=user.email,
+            password=user.password,
+            role=user.role,
+            # created_at=None,
+            # updated_at=None
+        )
         
-        obj = registration_domain.User(name = user.name, email = user.email, password = user.password, role = user.role)
-        user_data = obj.to_dict()
+        # Get user data and update with hashed password and timestamps
+        user_data = domain_user.to_dict()
+        user_data["password"] = hashed_password
+        user_data["created_at"] = datetime.now(timezone.utc)
+        user_data["updated_at"] = datetime.now(timezone.utc)
+        print(user_data)
 
-        user_data['password'] = hashed_password
-
-        result = await self.user_reg_repo.add_user(user_data = user_data)
-        signed_user = await self.user_reg_repo.get_user(_id = {'_id': result.inserted_id})
+        result = await self.user_reg_repo.add_user(user_data=user_data)
+        signed_user = await self.user_reg_repo.get_user(_id={'_id': result.inserted_id})
         return user_helper(signed_user)
     
 def get_reg_service() -> RegistrationService:

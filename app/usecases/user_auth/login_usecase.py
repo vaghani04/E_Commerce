@@ -17,7 +17,7 @@ class TaskLoginUser:
         if not await check_password(plain_password = user_info.password, hashed_password = user['password']):
             raise HTTPException(status_code=401, detail="Invalid credentials")
         
-        access_token = self.login_service.create_access_token({"sub" : user['name']})
+        access_token = self.login_service.create_access_token({"sub": str(user["_id"]), "role": user["role"]})
 
         return {
             'access_token' : access_token,

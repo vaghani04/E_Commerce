@@ -1,11 +1,11 @@
-from app.config.database import mongo_db_obj
-from app.models.schemas import user_schemas
+from app.config.database import db_helper
+from app.models.schemas.user_schemas import UserCreate
 
 class UserRegistrationRepo:
     def __init__(self):
-        self.collection = mongo_db_obj.user_collection
+        self.collection = db_helper.users
 
-    async def add_user(self, user_data: user_schemas.User):
+    async def add_user(self, user_data: UserCreate):
         result = await self.collection.insert_one(user_data)
         return result
     
