@@ -4,9 +4,7 @@ from app.models.schemas.user_schemas import UserCreate
 from app.models.domain import registration_domain
 from app.utils.helper import user_helper
 from app.repositories.registration_repo import UserRegistrationRepo
-from fastapi import Depends
 from datetime import datetime, timezone
-
 
 class RegistrationService:
     
@@ -37,11 +35,8 @@ class RegistrationService:
             email=user.email,
             password=user.password,
             role=user.role,
-            # created_at=None,
-            # updated_at=None
         )
-        
-        # Get user data and update with hashed password and timestamps
+
         user_data = domain_user.to_dict()
         user_data["password"] = hashed_password
         user_data["created_at"] = datetime.now(timezone.utc)

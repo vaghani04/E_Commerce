@@ -1,5 +1,3 @@
-from bson import ObjectId
-
 class User:
     def __init__(self, name, email, password, role):
         self.name = name

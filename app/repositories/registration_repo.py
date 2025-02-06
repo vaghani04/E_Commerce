@@ -13,5 +13,5 @@ class UserRegistrationRepo:
         user = await self.collection.find_one(_id)
         return user
     
-def get_user_reg_repo() -> UserRegistrationRepo:
+def get_user_reg_repo():
     return UserRegistrationRepo()

@@ -15,5 +15,10 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
     except jwt.JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
     
-
-# async def is_seller(payload)
+async def verify_admin(current_user: dict = Depends(get_current_user)):
+    if current_user.get("role") != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="You don't have permission to perform this action"
+        )
+    return current_user

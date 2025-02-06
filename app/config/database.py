@@ -1,6 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.config.settings import settings
-from typing import Optional
 
 class DBHelper:
     def __init__(self):

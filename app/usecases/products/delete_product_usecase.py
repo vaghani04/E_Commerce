@@ -6,5 +6,4 @@ class TaskProductDelete:
         self.product_service = product_service
 
     async def task_delete_product(self, product_id: str):
-        print(f'task: {product_id}')
         return await self.product_service.delete_product(product_id=product_id)

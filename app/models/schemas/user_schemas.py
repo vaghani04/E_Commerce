@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import Literal
 from datetime import datetime
+from enum import Enum
 
 class UserCreate(BaseModel):
     name: str
@@ -9,7 +10,6 @@ class UserCreate(BaseModel):
     role: Literal['admin', 'buyer', 'seller']
     
 class UserResponse(BaseModel):
-    _id: str
     name: str
     email: EmailStr
     role: str
@@ -23,3 +23,13 @@ class Login(BaseModel):
 class AccessToken(BaseModel):
     access_token: str
     token_type: str
+
+
+class UserRole(str, Enum):
+    ADMIN = "admin",
+    SELLER = "seller",
+    USER = "user"
+
+class UserRoleUpdate(BaseModel):
+    user_id: str
+    role: UserRole

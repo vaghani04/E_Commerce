@@ -8,13 +8,11 @@ class ProductRepo:
 
     async def add_product(self, product_data: dict):
         result = await self.collection.insert_one(product_data)
-        # print(result['created_at'])
+        print(product_data)
         return result
     
     async def get_product(self, product_id: str):
-        # print(product_id)
         product = await self.collection.find_one(product_id)
-        # print(product)
         if product:
             product["_id"] = str(product["_id"])
         return product

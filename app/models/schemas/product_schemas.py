@@ -1,21 +1,3 @@
-# from pydantic import BaseModel, ConfigDict, Field
-# from typing import List, Any
-# from bson import ObjectId
-
-    
-# class ProductDetails(BaseModel):
-
-#     title: str
-#     description: str
-#     category: str
-#     price: float
-#     rating: float
-#     brand: str
-#     images: List[str]
-#     thumbnail: str
-#     sku: str
-    
-
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
@@ -32,6 +14,7 @@ class ProductResponse(BaseModel):
     
     # id: str
     title: str
+    seller_id: str
     description: str
     category: str
     price: float

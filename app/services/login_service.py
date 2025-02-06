@@ -32,5 +32,5 @@ class LoginService:
         
         return encoded_jwt
     
-def get_login_service() -> LoginService:
+def get_login_service():
     return LoginService()

@@ -1,4 +1,4 @@
-def user_helper(user) -> dict:
+def user_helper(user):
     return {
         'name' : user['name'],
         'email' : user['email'],

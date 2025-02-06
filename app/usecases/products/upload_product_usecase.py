@@ -6,9 +6,9 @@ class TaskProductUpload:
     def __init__(self, product_service: ProductService = Depends(get_product_service)):
         self.product_service = product_service
 
-    async def task_upload_product(self, product: ProductCreate):
+    async def task_upload_product(self, product: ProductCreate, current_user: dict):
         try:
-            return await self.product_service.create_product(product)
+            return await self.product_service.create_product(product, current_user)
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to upload product: {str(e)}")
              

@@ -12,8 +12,11 @@ class ProductService:
         self.product_repo = ProductRepo()
         self.collection = db_helper.products
 
-    async def create_product(self, product: ProductCreate):
+    async def create_product(self, product: ProductCreate, current_user: dict):
         try:
+            if current_user['role'] != "seller":
+                raise HTTPException(status_code=403, detail="Only sellers can create products")
+
             obj = product_domain.Product(
                 title=product.title,
                 description=product.description,
@@ -23,7 +26,7 @@ class ProductService:
                 brand=product.brand
             )
             product_data = obj.to_dict()
-
+            product_data["seller_id"] = current_user["sub"]
             result = await self.product_repo.add_product(product_data)
             if not result:
                 raise HTTPException(status_code=500, detail="Error inserting product into the database")
@@ -59,21 +62,7 @@ class ProductService:
                 status_code=500, 
                 detail=f"Failed to fetch products: {str(e)}"
             )
-
-    # async def get_specific_product(self, product_id: str):
-    #     try:
-    #         product = await self.product_repo.get_product({"_id": ObjectId(product_id)})
-            
-    #         if not product:
-    #             raise HTTPException(status_code=404, detail="Product not found")
-                
-    #         return ProductResponse.model_validate(product)
-            
-    #     except Exception as e:
-    #         if isinstance(e, HTTPException):
-    #             raise e
-    #         raise HTTPException(status_code=500, detail=f"Failed to fetch product: {str(e)}")
-
+        
     async def get_specific_product(self, product_id: str):
         try:
             product = await self.product_repo.get_product(product_id)
@@ -118,26 +107,6 @@ class ProductService:
                 raise e
             raise HTTPException(status_code=500, detail=f"Failed to update product: {str(e)}")
 
-
-    # async def delete_product(self, product_id: str):
-    #     try:
-    #         product = await self.product_repo.get_product(product_id)
-    #         # print(product)
-    #         if not product:
-    #             raise HTTPException(status_code=404, detail="Product not found")
-
-    #         delete_result = await self.product_repo.delete_product(product_id)
-    #         print(f'de;ete: {delete_result}')
-    #         if delete_result.deleted_count == 0:
-    #             raise HTTPException(status_code=500, detail="Failed to delete product")
-            
-    #         return {"message": "Product deleted successfully"}
-        
-    #     except Exception as e:
-    #         if isinstance(e, HTTPException):
-    #             raise e
-    #         raise HTTPException(status_code=500, detail=f"Failed to delete product: {str(e)}")
-
     async def delete_product(self, product_id: str):
         try:
             product = await self.product_repo.get_product(product_id)
@@ -155,7 +124,6 @@ class ProductService:
             if isinstance(e, HTTPException):
                 raise e
             raise HTTPException(status_code=500, detail=f"Failed to delete product: {str(e)}")
-
     
 def get_product_service() -> ProductService:
     return ProductService()
