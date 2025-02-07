@@ -28,7 +28,7 @@ class AccessToken(BaseModel):
 class UserRole(str, Enum):
     ADMIN = "admin",
     SELLER = "seller",
-    USER = "user"
+    Buyer = "buyer"
 
 class UserRoleUpdate(BaseModel):
     user_id: str

@@ -7,6 +7,8 @@ class DBHelper:
         self.db = self.client[settings.DATABASE_NAME]
         self.products = self.db["products"]
         self.users = self.db["users"]
+        self.carts = self.db["carts"]
+        self.orders = self.db["orders"]
 
     async def connect(self):
         try:

@@ -4,6 +4,8 @@ from app.config.database import db_helper
 from app.routes.product_routes import product_router
 from app.routes.auth_routes import auth_router
 from app.routes.user_routes import user_router
+from app.routes.cart_routes import cart_router
+from app.routes.order_routes import order_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -17,6 +19,8 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(product_router)
 app.include_router(auth_router)
 app.include_router(user_router)
+app.include_router(cart_router)
+app.include_router(order_router)
 
 @app.get("/")
 async def root():
