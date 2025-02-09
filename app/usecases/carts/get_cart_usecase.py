@@ -7,3 +7,6 @@ class GetCartUseCase:
 
     async def get_cart(self, data: dict):
         return await self.cart_service.get_cart(data)
+    
+    async def get_specific_cart(self, data: dict):
+        return await self.cart_service.get_specific_cart(data)

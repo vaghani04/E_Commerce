@@ -12,7 +12,7 @@ class ProductRepo:
         return result
     
     async def get_product(self, product_id: str):
-        product = await self.collection.find_one(product_id)
+        product = await self.collection.find_one({"_id": product_id})
         if product:
             product["_id"] = str(product["_id"])
         return product
@@ -39,7 +39,7 @@ class ProductRepo:
         
     async def delete_product(self, product_id: str):
         try:
-            result = await self.collection.delete_one({"_id": ObjectId(product_id)})
+            result = await self.collection.delete_one({"_id": product_id})
             return result
         except Exception as e:
             raise HTTPException(

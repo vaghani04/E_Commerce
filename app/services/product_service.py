@@ -14,8 +14,8 @@ class ProductService:
 
     async def create_product(self, product: ProductCreate, current_user: dict):
         try:
-            if current_user['role'] != "seller":
-                raise HTTPException(status_code=403, detail="Only sellers can create products")
+            # if current_user['role'] != "seller":
+            #     raise HTTPException(status_code=403, detail="Only sellers can create products")
 
             obj = product_domain.Product(
                 title=product.title,
@@ -50,8 +50,9 @@ class ProductService:
                     price=product["price"],
                     rating=product["rating"],
                     brand=product["brand"],
-                    created_at=datetime.fromisoformat(product["created_at"]) if isinstance(product["created_at"], str) else product["created_at"],
-                    updated_at=datetime.fromisoformat(product["updated_at"]) if isinstance(product["updated_at"], str) else product["updated_at"]
+                    created_at=product["created_at"],
+                    updated_at=product["updated_at"],
+                    seller_id=product["seller_id"]
                 ) for product in products
             ]
             
@@ -77,12 +78,12 @@ class ProductService:
                 raise e
             raise HTTPException(status_code=500, detail=f"Failed to fetch product: {str(e)}")
 
-    async def update_product(self, product_id: str, product: ProductCreate):
+    async def update_product(self, product_id: str, product: ProductCreate, current_user: dict):
         try:
             existing_product = await self.product_repo.get_product(product_id)
             if not existing_product:
                 raise HTTPException(status_code=404, detail="Product not found")
-
+            print(existing_product['seller_id'])
             update_data = {
                 "title": product.title,
                 "description": product.description,
@@ -90,7 +91,8 @@ class ProductService:
                 "price": product.price,
                 "rating": product.rating,
                 "brand": product.brand,
-                "updated_at": datetime.now(timezone.utc)
+                "updated_at": datetime.now(timezone.utc),
+                "seller_id": current_user["sub"]
             }
 
             updated_product = await self.product_repo.update_product(

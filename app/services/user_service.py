@@ -15,6 +15,7 @@ class UserService:
             if not user:
                 raise HTTPException(status_code=404, detail="User not found")
             return UserRoleUpdate(
+                user_id=user["_id"],
                 role=user["role"]
             )
         except Exception as e:
@@ -60,8 +61,10 @@ class UserService:
                     name=user["name"],
                     email=user["email"],
                     role=user["role"],
-                    created_at=datetime.fromisoformat(user["created_at"]) if isinstance(user["created_at"], str) else user["created_at"],
-                    updated_at=datetime.fromisoformat(user["updated_at"]) if isinstance(user["updated_at"], str) else user["updated_at"]
+                    created_at=user["created_at"],
+                    updated_at=user["updated_at"]
+                    # created_at=datetime.fromisoformat(user["created_at"]) if isinstance(user["created_at"], str) else user["created_at"],
+                    # updated_at=datetime.fromisoformat(user["updated_at"]) if isinstance(user["updated_at"], str) else user["updated_at"]
                 ) for user in users
             ]
             

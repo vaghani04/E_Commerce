@@ -17,8 +17,8 @@ class ProductCon:
     async def get_specific_product(self, product_id: str):
         return await self.product_fetch_usecase.task_get_specific_product(product_id=product_id)
     
-    async def update_product(self, product_id: str, product: ProductCreate):
-        return await self.product_usecase.task_update_product(product_id, product)
+    async def update_product(self, product_id: str, product: ProductCreate, current_user: dict):
+        return await self.product_usecase.task_update_product(product_id, product, current_user)
     
     async def delete_product(self, product_id: str):
         return await self.product_delete_usecase.task_delete_product(product_id)

@@ -19,3 +19,9 @@ class CartService:
             return await self.cart_repo.get_cart(data)
         except Exception:
             raise HTTPException(status_code=500, detail="Error fetching cart")
+        
+    async def get_specific_cart(self, data: dict):
+        try:
+            return await self.cart_repo.get_specific_cart(data)
+        except Exception:
+            raise HTTPException(status_code=500, detail="Error while fetching the cart")

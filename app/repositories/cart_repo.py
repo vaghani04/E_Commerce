@@ -71,3 +71,7 @@ class CartRepository:
                 })
 
         return {"items": cart_response_items, "total_price": total_price}
+
+    async def get_specific_cart(self, data: dict):
+        cart_item = await self.cart_collection.find_one({"user_id": data["user_id"], "product_id": data["product_id"]})
+        return cart_item

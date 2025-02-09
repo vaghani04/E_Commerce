@@ -14,12 +14,12 @@ async def get_current_user_profile(user_controller: UserCon = Depends(), current
 
 @user_router.get("/users", response_model=List[UserResponse])
 async def get_all_users(user_controller: UserCon = Depends(), current_user: dict = Depends(get_current_user)):
-    if current_user["role"] != "Admin":
+    if current_user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Only admins can access this endpoint")
     return await user_controller.get_users()
 
 @user_router.put("/users/{user_id}/role", response_model=UserRoleUpdate)
 async def update_user_role(user_date: UserRoleUpdate, user_controller: UserCon = Depends(), current_user: dict = Depends(get_current_user)):
-    if current_user["role"] != "Admin":
+    if current_user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Only admins can update user roles")
     return await user_controller.update_user_role(user_date)

@@ -13,8 +13,8 @@ class TaskProductUpload:
             raise HTTPException(status_code=500, detail=f"Failed to upload product: {str(e)}")
              
     
-    async def task_update_product(self, product_id: str, product: ProductCreate):
+    async def task_update_product(self, product_id: str, product: ProductCreate, current_user: dict):
         try:
-            return await self.product_service.update_product(product_id, product)
+            return await self.product_service.update_product(product_id, product, current_user)
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"Failed to upload product: {str(e)}")
