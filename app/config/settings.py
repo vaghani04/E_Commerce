@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     ALGORITHM: str = os.getenv("ALGORITHM")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    GCP_BUCKET_NAME: str = os.getenv("GCP_BUCKET_NAME")
+    COMPLAINT_FOLDER_NAME: str = os.getenv("COMPLAINT_FOLDER_NAME")
+    SERVICE_ACC_JSON: str = os.getenv("SERVICE_ACC_JSON")
 
     class Config:
         env_file = ".env"

@@ -21,3 +21,4 @@ class OrderResponseSchema(BaseModel):
     total_price: float
     status: str
     created_at: datetime
+    updated_at: datetime

@@ -39,7 +39,8 @@ class OrderRepository:
                 "items": order_items,
                 "total_price": total_price,
                 "status": "Pending",
-                "created_at": datetime.now(timezone.utc)
+                "created_at": datetime.now(timezone.utc),
+                "updated_at": datetime.now(timezone.utc)
             }
 
             result = await self.order_collection.insert_one(order_data)
@@ -58,5 +59,16 @@ class OrderRepository:
     async def get_buyer_orders(self, data: dict):
         return await self.order_collection.find({"user_id": data["user_id"]}).to_list(length=None)
 
-    async def get_order_details(self, data: dict):
-        return await self.order_collection.find_one({"_id": ObjectId(data["order_id"]), "user_id": data["user_id"]})
+    # async def get_order_details(self, data: dict):
+    #     return await self.order_collection.find_one({"_id": ObjectId(data["order_id"]), "user_id": data["user_id"]})
+
+    async def get_order_by_id(self, data: dict):
+        order =  await self.order_collection.find_one({"_id": ObjectId(data["order_id"])})
+        order["order_id"] = data["order_id"]
+        return order
+
+    async def update_order_status(self, data: dict):
+        await self.order_collection.update_one(
+            {"_id": ObjectId(data["order_id"])},
+            {"$set": {"status": data["status"], "updated_at": data["updated_at"]}}
+        )
